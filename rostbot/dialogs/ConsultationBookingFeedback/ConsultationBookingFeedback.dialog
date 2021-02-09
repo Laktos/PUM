@@ -1,0 +1,144 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "PTtunS",
+    "name": "ConsultationBookingFeedback",
+    "description": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "jjhwnY"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.ChoiceInput",
+          "$designer": {
+            "id": "GuCMjZ"
+          },
+          "defaultLocale": "en-us",
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "prompt": "${ChoiceInput_Prompt_GuCMjZ()}",
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "choiceOptions": {
+            "includeNumbers": true,
+            "inlineOrMore": ", or ",
+            "inlineOr": " or ",
+            "inlineSeparator": ", "
+          },
+          "choices": [
+            "Ja",
+            "Nej"
+          ],
+          "property": "turn.choice",
+          "recognizerOptions": {
+            "recognizeOrdinals": true,
+            "recognizeNumbers": true
+          }
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "rkJOUt"
+          },
+          "condition": "turn.choice == 'Ja'",
+          "actions": [
+            {
+              "$kind": "Microsoft.TextInput",
+              "$designer": {
+                "id": "TFyExH"
+              },
+              "disabled": false,
+              "maxTurnCount": 3,
+              "alwaysPrompt": false,
+              "allowInterruptions": false,
+              "unrecognizedPrompt": "",
+              "invalidPrompt": "",
+              "defaultValueResponse": "",
+              "property": "dialog.consultationcontext",
+              "prompt": "${TextInput_Prompt_TFyExH()}"
+            }
+          ],
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "1oVfhV"
+              },
+              "activity": "${SendActivity_1oVfhV()}"
+            },
+            {
+              "$kind": "Microsoft.SetProperty",
+              "$designer": {
+                "id": "cAZHsr"
+              },
+              "property": "dialog.consultationcontext",
+              "value": "='N/A'"
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "7zUVSN"
+          },
+          "method": "POST",
+          "url": "${conversation.req_url}/current-bookings",
+          "body": {
+            "bookingdate": "${user.bookingdate}",
+            "type": "${user.bookingtype}",
+            "free-text": "${dialog.consultationcontext}"
+          },
+          "contentType": "application/json",
+          "resultProperty": "dialog.result_post"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "ND71Ip"
+          },
+          "condition": "dialog.result_post.statusCode == 200",
+          "actions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "0BUwKp"
+              },
+              "activity": "${SendActivity_0BUwKp()}"
+            },
+            {
+              "$kind": "Microsoft.BeginDialog",
+              "$designer": {
+                "id": "Q7Tbty"
+              },
+              "activityProcessed": true,
+              "dialog": "EmailConfirmation"
+            }
+          ],
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "R0nvyK"
+              },
+              "activity": "${SendActivity_R0nvyK()}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "generator": "ConsultationBookingFeedback.lg",
+  "recognizer": "ConsultationBookingFeedback.lu.qna",
+  "id": "ConsultationBookingFeedback"
+}

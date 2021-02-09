@@ -1,0 +1,222 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "lmMIcd",
+    "name": "NotificationsSettingsDialog",
+    "description": "Shows a card that allows you to set options for your notifications. Does not at the moment allow for printing several notifications or removing them. When cancelled shows UpdateCard()"
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "6HAJko"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "I14ASf"
+          },
+          "condition": "user.notisTyp == null",
+          "actions": [
+            {
+              "$kind": "Microsoft.SetProperties",
+              "$designer": {
+                "id": "DEWt9O"
+              },
+              "assignments": [
+                {
+                  "property": "user.notisTyp",
+                  "value": ""
+                },
+                {
+                  "property": "user.notisVia",
+                  "value": ""
+                },
+                {
+                  "property": "user.notisSnooze",
+                  "value": ""
+                },
+                {
+                  "property": "user.notisInnan",
+                  "value": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "qIec1U"
+          },
+          "method": "GET",
+          "url": "${conversation.req_url}/current-notifications",
+          "resultProperty": "dialog.resultProperty",
+          "contentType": "application/json"
+        },
+        {
+          "$kind": "Microsoft.SetProperties",
+          "$designer": {
+            "id": "SBsOuE"
+          },
+          "assignments": [
+            {
+              "property": "user.notis.via",
+              "value": "${dialog.resultProperty.content[0].noticemediatype}"
+            },
+            {
+              "property": "user.notis.time.after",
+              "value": "${dialog.resultProperty.content[0].timeafter}"
+            },
+            {
+              "property": "user.notis.time.before",
+              "value": "${dialog.resultProperty.content[0].timebefore}"
+            },
+            {
+              "value": "${dialog.resultProperty.content[0].type}",
+              "property": "user.notis.measurments"
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "Pl11TG"
+          },
+          "activity": "${SendActivity_Pl11TG()}"
+        },
+        {
+          "$kind": "Microsoft.EndTurn",
+          "$designer": {
+            "id": "oTu6EX"
+          }
+        },
+        {
+          "$kind": "Microsoft.SetProperties",
+          "$designer": {
+            "id": "sy3xfN"
+          },
+          "assignments": [
+            {
+              "property": "user.notis.via",
+              "value": "=@notisVia"
+            },
+            {
+              "property": "user.notis.time.after",
+              "value": "=@timeAfter"
+            },
+            {
+              "property": "user.notis.time.before",
+              "value": "=@timeBefore"
+            },
+            {
+              "value": "=@notisMeasurments",
+              "property": "user.notis.measurments"
+            },
+            {
+              "property": "dialog.show.notifications",
+              "value": true
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "zhRXDX"
+          },
+          "url": "${conversation.req_url}/current-notifications",
+          "method": "PUT",
+          "headers": {},
+          "contentType": "application/json",
+          "responseType": "json",
+          "body": {
+            "noticemediatype": "${user.notis.via}",
+            "timeafter": "${user.notis.time.after}",
+            "timebefore": "${user.notis.time.before}",
+            "type": "${user.notis.measurments}"
+          }
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "U8Gavs"
+          },
+          "condition": "=user.notis.via == \"\"",
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SetProperties",
+              "$designer": {
+                "id": "hDYVg3"
+              },
+              "assignments": [
+                {
+                  "property": "user.notisTyp",
+                  "value": "Typ: "
+                },
+                {
+                  "property": "user.notisVia",
+                  "value": "Via: "
+                },
+                {
+                  "value": "Snooze: ",
+                  "property": "user.notisSnooze"
+                },
+                {
+                  "property": "user.notisInnan",
+                  "value": "Innan: "
+                }
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "$kind": "Microsoft.SetProperties",
+              "$designer": {
+                "id": "MtDOss"
+              },
+              "assignments": [
+                {
+                  "property": "user.notisTyp",
+                  "value": ""
+                },
+                {
+                  "property": "user.notisVia",
+                  "value": ""
+                },
+                {
+                  "property": "user.notisSnooze",
+                  "value": ""
+                },
+                {
+                  "property": "user.notisInnan",
+                  "value": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.RepeatDialog",
+          "$designer": {
+            "id": "zOgxUg"
+          },
+          "activityProcessed": true
+        },
+        {
+          "$kind": "Microsoft.EndDialog",
+          "$designer": {
+            "id": "RHnIr5"
+          }
+        }
+      ]
+    }
+  ],
+  "generator": "NotificationsSettingsDialog.lg",
+  "recognizer": "NotificationsSettingsDialog.lu.qna",
+  "id": "NotificationsSettingsDialog"
+}

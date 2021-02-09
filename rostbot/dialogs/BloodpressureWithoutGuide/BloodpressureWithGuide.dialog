@@ -1,0 +1,215 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "cecf7O",
+    "name": "MeasureWithoutGuide",
+    "description": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "I8RsXT"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "DYsQGv"
+          },
+          "activity": "${SendActivity_DYsQGv()}"
+        },
+        {
+          "$kind": "Microsoft.EndTurn",
+          "$designer": {
+            "id": "HgKwWU"
+          }
+        },
+        {
+          "$kind": "Microsoft.SetProperties",
+          "$designer": {
+            "id": "EA0YMk"
+          },
+          "assignments": [
+            {
+              "property": "user.sysvalue",
+              "value": "=@systolisk"
+            },
+            {
+              "property": "user.diavalue",
+              "value": "=@diastolisk"
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.TextInput",
+          "$designer": {
+            "id": "h5Ktbw"
+          },
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "prompt": "${TextInput_Prompt_h5Ktbw()}",
+          "property": "turn.confirm"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "uyRbGk"
+          },
+          "condition": "toLower(turn.confirm) == \"ja\"",
+          "actions": [
+            {
+              "$kind": "Microsoft.BeginDialog",
+              "$designer": {
+                "id": "am4Trn"
+              },
+              "activityProcessed": true,
+              "dialog": "AddMeasurementsOpenEHR",
+              "options": {
+                "systolic": "${user.sysvalue}",
+                "diastolic": "${user.diavalue}"
+              },
+              "resultProperty": "dialog.successful_request"
+            },
+            {
+              "$kind": "Microsoft.IfCondition",
+              "$designer": {
+                "id": "WKTZif"
+              },
+              "condition": "dialog.successful_request",
+              "elseActions": [
+                {
+                  "$kind": "Microsoft.SendActivity",
+                  "$designer": {
+                    "id": "vn5ACr"
+                  },
+                  "activity": "${SendActivity_vn5ACr()}"
+                }
+              ],
+              "actions": [
+                {
+                  "$kind": "Microsoft.TextInput",
+                  "$designer": {
+                    "id": "A12pzQ"
+                  },
+                  "disabled": false,
+                  "maxTurnCount": 3,
+                  "alwaysPrompt": false,
+                  "allowInterruptions": false,
+                  "prompt": "${TextInput_Prompt_A12pzQ()}",
+                  "unrecognizedPrompt": "",
+                  "invalidPrompt": "",
+                  "defaultValueResponse": ""
+                }
+              ]
+            }
+          ],
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SetProperties",
+              "$designer": {
+                "id": "cexCRX"
+              },
+              "assignments": [
+                {
+                  "property": "user.sysvalue",
+                  "value": "=null"
+                },
+                {
+                  "property": "user.diavalue",
+                  "value": "=null"
+                }
+              ]
+            },
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "prvC1W"
+              },
+              "activity": "${SendActivity_prvC1W()}"
+            },
+            {
+              "$kind": "Microsoft.RepeatDialog",
+              "$designer": {
+                "id": "BiVUBT"
+              },
+              "activityProcessed": true,
+              "allowLoop": true
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.BeginDialog",
+          "$designer": {
+            "id": "KQ1rII"
+          },
+          "activityProcessed": true,
+          "dialog": "FinishedMeasurementDialog"
+        },
+        {
+          "$kind": "Microsoft.TextInput",
+          "$designer": {
+            "id": "ouIfx9"
+          },
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "prompt": "${TextInput_Prompt_ouIfx9()}",
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "property": "turn.value"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "neqQ56"
+          },
+          "condition": "turn.value == 'Registrera ytterligare värden'",
+          "actions": [
+            {
+              "$kind": "Microsoft.BeginDialog",
+              "$designer": {
+                "id": "iXnwcr"
+              },
+              "activityProcessed": true,
+              "dialog": "RegisterValueTypeSelection"
+            }
+          ],
+          "elseActions": []
+        },
+        {
+          "$kind": "Microsoft.BeginDialog",
+          "$designer": {
+            "id": "I411f4"
+          },
+          "activityProcessed": true,
+          "dialog": "CancelDialog"
+        },
+        {
+          "$kind": "Microsoft.EndDialog",
+          "$designer": {
+            "id": "IWJzWO"
+          }
+        }
+      ],
+      "priority": 0
+    }
+  ],
+  "generator": "BloodpressureWithGuide.lg",
+  "recognizer": {
+    "$kind": "Microsoft.RegexRecognizer",
+    "intents": []
+  },
+  "id": "MeasureWithGuide"
+}

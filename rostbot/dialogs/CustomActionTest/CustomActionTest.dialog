@@ -1,0 +1,41 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "W9YHzP",
+    "name": "CustomActionTest",
+    "description": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "z2v5Cv"
+      },
+      "actions": [
+        {
+          "$kind": "MultiplyDialog",
+          "$designer": {
+            "id": "58GlEz"
+          },
+          "arg1": 99,
+          "arg2": 99,
+          "resultProperty": "user.out"
+        },
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "L7psDB"
+          },
+          "activity": "${SendActivity_L7psDB()}"
+        }
+      ]
+    }
+  ],
+  "generator": "CustomActionTest.lg",
+  "recognizer": "CustomActionTest.lu.qna",
+  "id": "CustomActionTest"
+}
